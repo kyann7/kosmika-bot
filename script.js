@@ -150,7 +150,7 @@ window.addEventListener('resize', init);
 
 
 // ==========================================
-// ADIÇÃO: INJEÇÃO E ATUALIZAÇÃO EM TEMPO REAL
+// INJEÇÃO E ATUALIZAÇÃO CORRIGIDA
 // ==========================================
 
 const heroContainer = document.querySelector('.hero');
@@ -160,11 +160,11 @@ statusWrapper.className = 'status-wrapper';
 statusWrapper.innerHTML = `
   <div class="status-card">
     <span>Servidores</span>
-    <h3 id="server-count">--</h3>
+    <h3 id="server-count">50+</h3>
   </div>
   <div class="status-card">
     <span>Membros Suporte</span>
-    <h3 id="member-count">--</h3>
+    <h3 id="member-count">...</h3>
   </div>
   <div class="status-card">
     <span>Status</span>
@@ -176,33 +176,28 @@ if(heroContainer) {
     heroContainer.appendChild(statusWrapper);
 }
 
-// CONFIGURAÇÃO REAL
-const CONFIG = {
-    serverID: "931659654369513542", // ID do seu servidor de suporte
-    totalServers: "+50"      // COLOQUE AQUI A QUANTIDADE REAL DE SERVIDORES DO SEU BOT
-};
-
-async function updateLiveStats() {
+async function getLiveStats() {
+    const serverID = "931659654369513542"; // Seu ID
     try {
-        // Busca dados do Widget do Discord (Membros Online/Totais)
-        const response = await fetch(`https://discord.com/api/guilds/${CONFIG.serverID}/widget.json`);
+        const response = await fetch(`https://discord.com/api/guilds/${serverID}/widget.json`);
+        
+        if (!response.ok) throw new Error('Widget desativado');
+
         const data = await response.json();
 
-        if(data) {
-            // Atualiza Servidores (Valor manual definido acima)
-            document.getElementById('server-count').innerText = CONFIG.totalServers;
-
-            // Atualiza Membros do Suporte em Tempo Real
-            // data.presence_count mostra quantos estão online agora no seu servidor
+        // presence_count = membros online agora
+        if (data && data.presence_count !== undefined) {
             document.getElementById('member-count').innerText = data.presence_count;
+        } else {
+            document.getElementById('member-count').innerText = "150+";
         }
     } catch (error) {
-        console.error("Erro ao atualizar dados:", error);
+        console.log("Erro ao buscar dados reais. Verifique se o Widget está ON.");
+        // Valor padrão caso o bot/widget falhe
+        document.getElementById('member-count').innerText = "150+";
     }
 }
 
-// Executa ao carregar a página
-updateLiveStats();
-
-// ATUALIZAÇÃO EM TEMPO REAL: Roda a cada 30 segundos sem dar F5 na página
-setInterval(updateLiveStats, 30000);
+getLiveStats();
+// Atualiza a cada 1 minuto
+setInterval(getLiveStats, 60000);
