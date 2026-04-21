@@ -6,7 +6,7 @@ body {
   background: radial-gradient(circle at top, #0b0f1a, #000);
 }
 
-/* 🌌 fundo com estrelas suaves */
+/* 🌌 fundo com estrelas suaves */ 
 body::before {
   content: "";
   position: fixed;
