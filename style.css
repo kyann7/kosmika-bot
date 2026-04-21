@@ -238,3 +238,63 @@ footer {
   margin-right: 10px;
   box-shadow: 0 0 10px #23a55a;
 }
+/* --- PADRONIZAÇÃO DAS FUNCIONALIDADES --- */
+
+/* Alinha a seção de funcionalidades */
+.features {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 60px 20px;
+}
+
+/* Força os quadrados de baixo a terem o mesmo estilo dos de cima */
+.features .features-grid > div, 
+.features .card, 
+.features > div > div { 
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    padding: 30px !important;
+    width: 260px !important;
+    min-height: 200px;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Efeito de destaque ao passar o mouse */
+.features .features-grid > div:hover, 
+.features .card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(155, 89, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Estilo do Título (Moderação, Suporte, etc) */
+.features h3, 
+.features i + b,
+.features strong {
+    color: rgba(255, 255, 255, 0.6) !important;
+    text-transform: uppercase;
+    font-size: 0.85rem !important;
+    letter-spacing: 1.5px;
+    margin-bottom: 15px !important;
+    display: block;
+}
+
+/* Estilo dos Comandos (/comandos) */
+.features p, 
+.features li, 
+.features span:not(.online-indicator) {
+    color: #ffffff !important;
+    font-size: 1.1rem !important;
+    font-weight: 600;
+    margin: 4px 0 !important;
+    list-style: none;
+}
