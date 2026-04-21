@@ -44,9 +44,12 @@ nav a:hover {
   padding: 120px 20px;
 }
 
-/* IMAGEM DO BOT */
+/* IMAGEM DO BOT - MODIFICADA PARA FICAR REDONDA E PULSAR */
 .bot-img {
   width: 180px;
+  height: 180px; /* Definir altura igual à largura */
+  aspect-ratio: 1 / 1; /* Garante proporção 1:1 */
+  object-fit: cover; /* Recorta as bordas se a imagem original for retangular */
   border-radius: 50%;
   margin-bottom: 20px;
 
@@ -73,6 +76,7 @@ nav a:hover {
     box-shadow: 0 0 15px #5865F2;
     transform: scale(1);
   }
+} /* Chave de fechamento que estava faltando aqui */
 
 .hero h1 {
   font-size: 50px;
