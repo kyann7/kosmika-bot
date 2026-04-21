@@ -1,8 +1,6 @@
 const canvas = document.getElementById("space");
 
-if (!canvas) {
-  console.error("Canvas não encontrado");
-} else {
+if (canvas) {
   const ctx = canvas.getContext("2d");
 
   function resize() {
@@ -15,12 +13,12 @@ if (!canvas) {
 
   const stars = [];
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 120; i++) {
     stars.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      size: Math.random() * 2,
-      speed: Math.random() * 0.5
+      size: Math.random() * 1.5,
+      speed: Math.random() * 0.3
     });
   }
 
