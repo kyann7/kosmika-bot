@@ -11,49 +11,89 @@ if (canvas) {
   resize();
   window.addEventListener("resize", resize);
 
+  // ⭐ ESTRELAS
   const stars = [];
-  const STAR_COUNT = 150;
-
-  for (let i = 0; i < STAR_COUNT; i++) {
+  for (let i = 0; i < 120; i++) {
     stars.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       size: Math.random() * 1.5,
-      speed: Math.random() * 0.3
+      opacity: Math.random(),
+      speed: Math.random() * 0.2
     });
   }
 
-  let mouse = { x: null, y: null };
+  // 🪐 PLANETAS
+  const planets = [
+    { x: 200, y: 150, r: 40 },
+    { x: canvas.width - 300, y: canvas.height - 200, r: 60 }
+  ];
 
-  window.addEventListener("mousemove", e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
+  // 🛸 NAVES
+  const ships = [];
+
+  function spawnShip() {
+    ships.push({
+      x: -50,
+      y: Math.random() * canvas.height,
+      speed: 1 + Math.random() * 1
+    });
+  }
+
+  setInterval(spawnShip, 8000); // aparece a cada 8s
+
+  // 🌀 BURACO NEGRO
+  const blackHole = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    radius: 80,
+    angle: 0
+  };
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // ⭐ estrelas (com brilho)
     stars.forEach(star => {
-      star.y += star.speed;
-
-      if (star.y > canvas.height) {
-        star.y = 0;
-        star.x = Math.random() * canvas.width;
-      }
-
-      let dx = star.x - mouse.x;
-      let dy = star.y - mouse.y;
-      let dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < 120) {
-        star.x += dx * 0.01;
-        star.y += dy * 0.01;
-      }
+      star.opacity += (Math.random() - 0.5) * 0.05;
+      star.opacity = Math.max(0.2, Math.min(1, star.opacity));
 
       ctx.beginPath();
       ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-      ctx.fillStyle = "white";
+      ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
       ctx.fill();
+    });
+
+    // 🪐 planetas
+    planets.forEach(p => {
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+      grad.addColorStop(0, "rgba(150,150,255,0.4)");
+      grad.addColorStop(1, "transparent");
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    });
+
+    // 🌀 buraco negro
+    blackHole.angle += 0.01;
+    ctx.beginPath();
+    ctx.arc(blackHole.x, blackHole.y, blackHole.radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(120,0,255,0.3)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 🛸 naves
+    ships.forEach((ship, i) => {
+      ship.x += ship.speed;
+
+      ctx.fillStyle = "#aaa";
+      ctx.fillRect(ship.x, ship.y, 20, 4);
+
+      if (ship.x > canvas.width + 50) {
+        ships.splice(i, 1);
+      }
     });
 
     requestAnimationFrame(draw);
