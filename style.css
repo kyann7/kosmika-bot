@@ -1,19 +1,17 @@
-/* RESET BÁSICO */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* BODY */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   color: white;
-  background: radial-gradient(circle at top, #0b0f1a, #000);
   overflow-x: hidden;
+  background: radial-gradient(circle at top, #05070f, #000);
 }
 
-/* CANVAS FUNDO */
+/* CANVAS */
 #space {
   position: fixed;
   top: 0;
@@ -27,12 +25,15 @@ body {
 nav {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
+  padding: 20px 60px;
+}
+
+nav h2 {
+  font-size: 20px;
 }
 
 nav a {
-  margin-left: 20px;
+  margin-left: 25px;
   color: #aaa;
   text-decoration: none;
   font-size: 14px;
@@ -45,35 +46,39 @@ nav a:hover {
 /* HERO */
 .hero {
   text-align: center;
-  padding: 100px 20px;
+  padding: 140px 20px;
 }
 
 .hero h1 {
-  font-size: 40px;
-  color: #5865F2;
+  font-size: 56px;
+  background: linear-gradient(90deg, #6a7cff, #9b59ff);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .hero p {
-  margin-top: 10px;
+  margin-top: 15px;
   color: #aaa;
+  font-size: 16px;
 }
 
 /* BOTÕES */
 .buttons {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .btn {
-  padding: 12px 20px;
-  border-radius: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
   text-decoration: none;
-  margin: 5px;
+  margin: 10px;
   display: inline-block;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
 .primary {
   background: #5865F2;
+  box-shadow: 0 0 25px rgba(88,101,242,0.6);
   color: white;
 }
 
@@ -83,39 +88,49 @@ nav a:hover {
 }
 
 .btn:hover {
-  opacity: 0.8;
+  transform: scale(1.08);
+  box-shadow: 0 0 35px rgba(88,101,242,0.9);
 }
 
 /* STATS */
 .stats {
   display: flex;
   justify-content: space-around;
-  padding: 40px 20px;
+  padding: 60px;
+  background: rgba(255,255,255,0.02);
 }
 
 .stats h2 {
-  font-size: 24px;
+  font-size: 28px;
 }
 
 /* FEATURES */
 .features {
-  padding: 60px 20px;
+  padding: 100px 20px;
   text-align: center;
 }
 
 .grid {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+  gap: 30px;
+  margin-top: 50px;
+  flex-wrap: wrap;
 }
 
 .card {
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
-  border-radius: 10px;
-  width: 250px;
+  background: rgba(255,255,255,0.04);
+  padding: 30px;
+  border-radius: 18px;
+  width: 260px;
+  backdrop-filter: blur(15px);
+  transition: 0.3s;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 25px rgba(155,89,255,0.2);
 }
 
 .card h3 {
@@ -127,20 +142,20 @@ nav a:hover {
 }
 
 .card li {
-  margin: 5px 0;
+  margin: 6px 0;
   font-size: 14px;
-  color: #ccc;
+  color: #bbb;
 }
 
 /* ABOUT */
 .about {
-  padding: 60px 20px;
+  padding: 100px 20px;
   text-align: center;
 }
 
 /* FOOTER */
 footer {
-  padding: 20px;
+  padding: 25px;
   text-align: center;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.6);
 }
