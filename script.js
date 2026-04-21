@@ -11,10 +11,9 @@ if (canvas) {
   resize();
   window.addEventListener("resize", resize);
 
-  // ⭐ estrelas suaves (sem linhas bugadas)
   const stars = [];
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 120; i++) {
     stars.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -24,16 +23,34 @@ if (canvas) {
     });
   }
 
+  let mouse = { x: null, y: null };
+
+  window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     stars.forEach(star => {
-      // movimento leve
       star.y += star.speed;
 
       if (star.y > canvas.height) {
         star.y = 0;
         star.x = Math.random() * canvas.width;
+      }
+
+      // interação com mouse
+      if (mouse.x !== null) {
+        let dx = star.x - mouse.x;
+        let dy = star.y - mouse.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 100) {
+          star.x += dx * 0.01;
+          star.y += dy * 0.01;
+        }
       }
 
       // brilho suave
