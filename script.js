@@ -16,10 +16,14 @@ function init() {
     particles = [];
     specialElements = [];
     
-    // Estrelas de fundo (Poeira estelar)
+    // 150 Estrelas de fundo
     for (let i = 0; i < 150; i++) {
         particles.push(new Star());
     }
+
+    // Criando 3 naves e 2 buracos negros para começar
+    for (let i = 0; i < 3; i++) specialElements.push(new SpecialObject('ship'));
+    for (let i = 0; i < 2; i++) specialElements.push(new SpecialObject('blackhole'));
 }
 
 class Star {
@@ -31,8 +35,9 @@ class Star {
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 0.5;
         this.color = ['#5865F2', '#9b59ff', '#ffffff'][Math.floor(Math.random() * 3)];
-        this.speedX = (Math.random() - 0.5) * 0.5; // Movimento constante lento
-        this.speedY = (Math.random() - 0.5) * 0.5;
+        // Movimento em qualquer direção
+        this.speedX = (Math.random() - 0.5) * 0.8;
+        this.speedY = (Math.random() - 0.5) * 0.8;
     }
     draw() {
         ctx.fillStyle = this.color;
@@ -41,88 +46,88 @@ class Star {
         ctx.fill();
     }
     update() {
-        // Movimento natural
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Interação com mouse (Correnteza)
         let dx = mouse.x - this.x;
         let dy = mouse.y - this.y;
         let distance = Math.sqrt(dx * dx + dy * dy);
         if (distance < mouse.radius) {
             let force = (mouse.radius - distance) / mouse.radius;
-            this.x -= (dx / distance) * force * 2;
-            this.y -= (dy / distance) * force * 2;
+            this.x -= (dx / distance) * force * 3;
+            this.y -= (dy / distance) * force * 3;
         }
 
-        // Reposicionar se sair da tela
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-            this.reset();
-        }
+        if (this.x < 0) this.x = canvas.width;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.y < 0) this.y = canvas.height;
+        if (this.y > canvas.height) this.y = 0;
     }
 }
 
 class SpecialObject {
     constructor(type) {
-        this.type = type; // 'ship' ou 'blackhole'
+        this.type = type;
         this.reset();
     }
     reset() {
-        this.x = -100;
+        // Começa em bordas aleatórias
+        this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.speedX = this.type === 'ship' ? Math.random() * 2 + 1 : 0.2;
-        this.size = this.type === 'ship' ? 15 : 40;
-        this.active = true;
+        
+        // Velocidade aleatória para QUALQUER direção
+        this.speedX = (Math.random() - 0.5) * (this.type === 'ship' ? 3 : 1);
+        this.speedY = (Math.random() - 0.5) * (this.type === 'ship' ? 3 : 1);
+        
+        this.size = this.type === 'ship' ? 12 : 35;
+        this.angle = Math.atan2(this.speedY, this.speedX); // Direção para onde a nave aponta
     }
     draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        
         if (this.type === 'ship') {
-            // Desenho simples de uma nave (triângulo neon)
+            ctx.rotate(this.angle); // A nave aponta para onde ela anda
             ctx.fillStyle = '#00d4ff';
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x - 20, this.y - 10);
-            ctx.lineTo(this.x - 20, this.y + 10);
-            ctx.closePath();
             ctx.shadowBlur = 15;
             ctx.shadowColor = '#00d4ff';
+            ctx.beginPath();
+            ctx.moveTo(15, 0);
+            ctx.lineTo(-10, -8);
+            ctx.lineTo(-10, 8);
+            ctx.closePath();
             ctx.fill();
         } else {
-            // Buraco Negro (Círculo escuro com aura roxa)
-            let grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-            grad.addColorStop(0.2, '#000');
-            grad.addColorStop(0.8, '#9b59ff');
+            // Buraco Negro pulsante
+            let grad = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+            grad.addColorStop(0.1, '#000');
+            grad.addColorStop(0.7, '#9b59ff');
             grad.addColorStop(1, 'transparent');
             ctx.fillStyle = grad;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#9b59ff';
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
             ctx.fill();
         }
-        ctx.shadowBlur = 0; // Reseta brilho para não poluir
+        ctx.restore();
     }
     update() {
         this.x += this.speedX;
-        if (this.x > canvas.width + 100) this.reset();
+        this.y += this.speedY;
+
+        // Atravessa as bordas e volta do outro lado
+        if (this.x < -50) this.x = canvas.width + 50;
+        if (this.x > canvas.width + 50) this.x = -50;
+        if (this.y < -50) this.y = canvas.height + 50;
+        if (this.y > canvas.height + 50) this.y = -50;
     }
 }
 
-// Criar naves e buracos negros
-const ship = new SpecialObject('ship');
-const blackHole = new SpecialObject('blackhole');
-
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
-
-    ship.update();
-    ship.draw();
-
-    blackHole.update();
-    blackHole.draw();
-
+    particles.forEach(p => { p.update(); p.draw(); });
+    specialElements.forEach(s => { s.update(); s.draw(); });
     requestAnimationFrame(animate);
 }
 
