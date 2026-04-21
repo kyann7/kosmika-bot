@@ -12,11 +12,14 @@ if (canvas) {
   window.addEventListener("resize", resize);
 
   const stars = [];
-  for (let i = 0; i < 100; i++) {
+  const STAR_COUNT = 150;
+
+  for (let i = 0; i < STAR_COUNT; i++) {
     stars.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      size: Math.random() * 1.5
+      size: Math.random() * 1.5,
+      speed: Math.random() * 0.3
     });
   }
 
@@ -31,13 +34,20 @@ if (canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     stars.forEach(star => {
-      let dx = mouse.x - star.x;
-      let dy = mouse.y - star.y;
+      star.y += star.speed;
+
+      if (star.y > canvas.height) {
+        star.y = 0;
+        star.x = Math.random() * canvas.width;
+      }
+
+      let dx = star.x - mouse.x;
+      let dy = star.y - mouse.y;
       let dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (dist < 100) {
-        star.x -= dx * 0.01;
-        star.y -= dy * 0.01;
+      if (dist < 120) {
+        star.x += dx * 0.01;
+        star.y += dy * 0.01;
       }
 
       ctx.beginPath();
