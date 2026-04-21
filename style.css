@@ -288,13 +288,14 @@ footer {
     display: block;
 }
 
-/* Estilo dos Comandos (/comandos) */
+/* Estilo dos Comandos (/comandos) - ATUALIZADO */
 .features p, 
 .features li, 
 .features span:not(.online-indicator) {
     color: #ffffff !important;
-    font-size: 1.1rem !important;
-    font-weight: 600;
-    margin: 4px 0 !important;
+    font-size: 1.0rem !important; /* Diminuí um pouco para ficar mais elegante */
+    font-weight: 400 !important; /* 400 é o peso PADRÃO, sem negrito */
+    margin: 6px 0 !important;
     list-style: none;
+    opacity: 0.9; /* Deixa um pouco mais suave, combinando com o tema */
 }
