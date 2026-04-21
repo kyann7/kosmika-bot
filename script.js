@@ -16,14 +16,14 @@ function init() {
     particles = [];
     specialElements = [];
     
-    // 150 Estrelas de fundo
+    // 150 Estrelas de fundo (Poeira estelar lenta)
     for (let i = 0; i < 150; i++) {
         particles.push(new Star());
     }
 
-    // Criando 3 naves e 2 buracos negros para começar
-    for (let i = 0; i < 3; i++) specialElements.push(new SpecialObject('ship'));
-    for (let i = 0; i < 2; i++) specialElements.push(new SpecialObject('blackhole'));
+    // Começamos com apenas 1 nave e 1 buraco negro (Raridade)
+    specialElements.push(new SpecialObject('ship'));
+    specialElements.push(new SpecialObject('blackhole'));
 }
 
 class Star {
@@ -33,11 +33,12 @@ class Star {
     reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
+        this.size = Math.random() * 1.5 + 0.3; // Estrelas um pouco menores e mais finas
         this.color = ['#5865F2', '#9b59ff', '#ffffff'][Math.floor(Math.random() * 3)];
-        // Movimento em qualquer direção
-        this.speedX = (Math.random() - 0.5) * 0.8;
-        this.speedY = (Math.random() - 0.5) * 0.8;
+        
+        // VELOCIDADE REDUZIDA: Agora elas flutuam bem devagar
+        this.speedX = (Math.random() - 0.5) * 0.25; 
+        this.speedY = (Math.random() - 0.5) * 0.25;
     }
     draw() {
         ctx.fillStyle = this.color;
@@ -49,15 +50,17 @@ class Star {
         this.x += this.speedX;
         this.y += this.speedY;
 
+        // Interação suave com o mouse
         let dx = mouse.x - this.x;
         let dy = mouse.y - this.y;
         let distance = Math.sqrt(dx * dx + dy * dy);
         if (distance < mouse.radius) {
             let force = (mouse.radius - distance) / mouse.radius;
-            this.x -= (dx / distance) * force * 3;
-            this.y -= (dy / distance) * force * 3;
+            this.x -= (dx / distance) * force * 1.5; // Correnteza mais suave
+            this.y -= (dy / distance) * force * 1.5;
         }
 
+        // Teletransporte de borda
         if (this.x < 0) this.x = canvas.width;
         if (this.x > canvas.width) this.x = 0;
         if (this.y < 0) this.y = canvas.height;
@@ -71,40 +74,40 @@ class SpecialObject {
         this.reset();
     }
     reset() {
-        // Começa em bordas aleatórias
+        // Agora eles podem demorar mais para reaparecer
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         
-        // Velocidade aleatória para QUALQUER direção
-        this.speedX = (Math.random() - 0.5) * (this.type === 'ship' ? 3 : 1);
-        this.speedY = (Math.random() - 0.5) * (this.type === 'ship' ? 3 : 1);
+        // VELOCIDADE DOS ESPECIAIS: Também reduzida para não ser frenético
+        this.speedX = (Math.random() - 0.5) * (this.type === 'ship' ? 1.2 : 0.4);
+        this.speedY = (Math.random() - 0.5) * (this.type === 'ship' ? 1.2 : 0.4);
         
-        this.size = this.type === 'ship' ? 12 : 35;
-        this.angle = Math.atan2(this.speedY, this.speedX); // Direção para onde a nave aponta
+        this.size = this.type === 'ship' ? 10 : 30;
+        this.angle = Math.atan2(this.speedY, this.speedX);
     }
     draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
         
         if (this.type === 'ship') {
-            ctx.rotate(this.angle); // A nave aponta para onde ela anda
+            ctx.rotate(this.angle);
             ctx.fillStyle = '#00d4ff';
-            ctx.shadowBlur = 15;
+            ctx.shadowBlur = 12;
             ctx.shadowColor = '#00d4ff';
             ctx.beginPath();
-            ctx.moveTo(15, 0);
-            ctx.lineTo(-10, -8);
-            ctx.lineTo(-10, 8);
+            ctx.moveTo(12, 0);
+            ctx.lineTo(-8, -6);
+            ctx.lineTo(-8, 6);
             ctx.closePath();
             ctx.fill();
         } else {
-            // Buraco Negro pulsante
+            // Buraco Negro com aura roxa profunda
             let grad = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
             grad.addColorStop(0.1, '#000');
-            grad.addColorStop(0.7, '#9b59ff');
+            grad.addColorStop(0.8, '#9b59ff33'); // Mais transparente/raro
             grad.addColorStop(1, 'transparent');
             ctx.fillStyle = grad;
-            ctx.shadowBlur = 20;
+            ctx.shadowBlur = 15;
             ctx.shadowColor = '#9b59ff';
             ctx.beginPath();
             ctx.arc(0, 0, this.size, 0, Math.PI * 2);
@@ -116,11 +119,21 @@ class SpecialObject {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Atravessa as bordas e volta do outro lado
-        if (this.x < -50) this.x = canvas.width + 50;
-        if (this.x > canvas.width + 50) this.x = -50;
-        if (this.y < -50) this.y = canvas.height + 50;
-        if (this.y > canvas.height + 50) this.y = -50;
+        // Ao sair da tela, eles esperam um pouco antes de voltar (simula raridade)
+        if (this.x < -100 || this.x > canvas.width + 100 || 
+            this.y < -100 || this.y > canvas.height + 100) {
+            
+            // 0.5% de chance de reaparecer a cada frame após sair
+            if (Math.random() < 0.005) {
+                this.reset();
+                // Garante que reapareça nas bordas
+                if (Math.random() > 0.5) {
+                    this.x = Math.random() > 0.5 ? -50 : canvas.width + 50;
+                } else {
+                    this.y = Math.random() > 0.5 ? -50 : canvas.height + 50;
+                }
+            }
+        }
     }
 }
 
