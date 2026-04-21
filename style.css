@@ -46,11 +46,33 @@ nav a:hover {
 
 /* IMAGEM DO BOT */
 .bot-img {
-  width: 220px;
-  border-radius: 80%;
+  width: 180px;
+  border-radius: 50%;
   margin-bottom: 20px;
-  box-shadow: 0 0 25px #5865F2;
+
+  /* brilho base */
+  box-shadow: 0 0 20px #5865F2;
+
+  /* animação */
+  animation: glowPulse 2.5s infinite ease-in-out;
 }
+
+/* animação de pulsar */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 15px #5865F2;
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 40px #5865F2, 0 0 60px #9b59ff;
+    transform: scale(1.05);
+  }
+
+  100% {
+    box-shadow: 0 0 15px #5865F2;
+    transform: scale(1);
+  }
 
 .hero h1 {
   font-size: 50px;
