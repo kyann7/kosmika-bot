@@ -12,31 +12,37 @@ if (canvas) {
   window.addEventListener("resize", resize);
 
   const stars = [];
-
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 100; i++) {
     stars.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      size: Math.random() * 1.5,
-      speed: Math.random() * 0.2
+      size: Math.random() * 1.5
     });
   }
+
+  let mouse = { x: null, y: null };
+
+  window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "white";
-
     stars.forEach(star => {
-      star.y += star.speed;
+      let dx = mouse.x - star.x;
+      let dy = mouse.y - star.y;
+      let dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (star.y > canvas.height) {
-        star.y = 0;
-        star.x = Math.random() * canvas.width;
+      if (dist < 100) {
+        star.x -= dx * 0.01;
+        star.y -= dy * 0.01;
       }
 
       ctx.beginPath();
       ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = "white";
       ctx.fill();
     });
 
