@@ -147,3 +147,51 @@ function animate() {
 init();
 animate();
 window.addEventListener('resize', init);
+
+
+// ==========================================
+// ADIÇÃO: INJEÇÃO DOS 3 QUADRADOS (POP-UPS)
+// ==========================================
+
+const heroContainer = document.querySelector('.hero');
+const statusWrapper = document.createElement('div');
+statusWrapper.className = 'status-wrapper';
+
+statusWrapper.innerHTML = `
+  <div class="status-card">
+    <span>Servidores</span>
+    <h3 id="server-count">50+</h3>
+  </div>
+  <div class="status-card">
+    <span>Membros Suporte</span>
+    <h3 id="member-count">...</h3>
+  </div>
+  <div class="status-card">
+    <span>Status</span>
+    <h3><span class="online-indicator"></span>Online</h3>
+  </div>
+`;
+
+// Insere os cards após os botões sem mudar o HTML
+if(heroContainer) {
+    heroContainer.appendChild(statusWrapper);
+}
+
+// Função para buscar dados reais do servidor de suporte
+async function getLiveStats() {
+    try {
+        // Busca do seu servidor Kosmika via Widget
+        const response = await fetch('https://discord.com/api/guilds/S9VhaTXk76/widget.json');
+        const data = await response.json();
+
+        // Atualiza Membros (online agora no widget)
+        if(data && data.presence_count) {
+            document.getElementById('member-count').innerText = data.presence_count + "+";
+        }
+    } catch (error) {
+        console.log("Erro ao carregar membros reais, usando valor padrão.");
+        document.getElementById('member-count').innerText = "150";
+    }
+}
+
+getLiveStats();
