@@ -44,14 +44,14 @@ nav a:hover {
   padding: 120px 20px;
 }
 
-/* IMAGEM DO BOT - MODIFICADA PARA FICAR REDONDA E PULSAR */
+/* IMAGEM DO BOT - CORREÇÃO DEFINITIVA */
 .bot-img {
-  width: 180px;
-  height: 180px; /* Definir altura igual à largura */
-  aspect-ratio: 1 / 1; /* Garante proporção 1:1 */
-  object-fit: cover; /* Recorta as bordas se a imagem original for retangular */
-  border-radius: 50%;
-  margin-bottom: 20px;
+  width: 180px;         /* Largura fixa */
+  height: 180px;        /* Altura igual à largura para ser um quadrado */
+  object-fit: cover;    /* Corta as sobras da imagem original sem achatar o desenho */
+  border-radius: 50%;   /* Transforma o quadrado em círculo */
+  display: block;       /* Garante que o alinhamento central funcione bem */
+  margin: 0 auto 20px;  /* Centraliza horizontalmente e dá margem embaixo */
 
   /* brilho base */
   box-shadow: 0 0 20px #5865F2;
@@ -59,7 +59,6 @@ nav a:hover {
   /* animação */
   animation: glowPulse 2.5s infinite ease-in-out;
 }
-
 /* animação de pulsar */
 @keyframes glowPulse {
   0% {
