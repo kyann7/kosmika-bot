@@ -46,8 +46,8 @@ nav a:hover {
 
 /* IMAGEM DO BOT - CORREÇÃO DEFINITIVA */
 .bot-img {
-  width: 120px;         /* Largura fixa */
-  height: 120px;        /* Altura igual à largura para ser um quadrado */
+  width: 80px;         /* Largura fixa */
+  height: 80px;        /* Altura igual à largura para ser um quadrado */
   object-fit: cover;    /* Corta as sobras da imagem original sem achatar o desenho */
   border-radius: 50%;   /* Transforma o quadrado em círculo */
   display: block;       /* Garante que o alinhamento central funcione bem */
