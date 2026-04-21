@@ -116,15 +116,15 @@ statusGroup.className = 'status-wrapper';
 
 statusGroup.innerHTML = `
   <div class="status-card">
-    <span>Servidores</span>
+    <span>🛰️​ Servidores</span>
     <h3 id="servidores-real">50+</h3>
   </div>
   <div class="status-card">
-    <span>Membros Online</span>
+    <span>👥 Membros Online</span>
     <h3 id="membros-real">...</h3>
   </div>
   <div class="status-card">
-    <span>Status</span>
+    <span>⚡ Status</span>
     <h3><span class="online-indicator"></span>Online</h3>
   </div>
 `;
