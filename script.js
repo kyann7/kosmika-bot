@@ -150,7 +150,7 @@ window.addEventListener('resize', init);
 
 
 // ==========================================
-// ADIÇÃO: INJEÇÃO DOS 3 QUADRADOS (POP-UPS)
+// ADIÇÃO: INJEÇÃO E ATUALIZAÇÃO EM TEMPO REAL
 // ==========================================
 
 const heroContainer = document.querySelector('.hero');
@@ -160,11 +160,11 @@ statusWrapper.className = 'status-wrapper';
 statusWrapper.innerHTML = `
   <div class="status-card">
     <span>Servidores</span>
-    <h3 id="server-count">50+</h3>
+    <h3 id="server-count">--</h3>
   </div>
   <div class="status-card">
     <span>Membros Suporte</span>
-    <h3 id="member-count">...</h3>
+    <h3 id="member-count">--</h3>
   </div>
   <div class="status-card">
     <span>Status</span>
@@ -172,26 +172,37 @@ statusWrapper.innerHTML = `
   </div>
 `;
 
-// Insere os cards após os botões sem mudar o HTML
 if(heroContainer) {
     heroContainer.appendChild(statusWrapper);
 }
 
-// Função para buscar dados reais do servidor de suporte
-async function getLiveStats() {
+// CONFIGURAÇÃO REAL
+const CONFIG = {
+    serverID: "931659654369513542", // ID do seu servidor de suporte
+    totalServers: "+50"      // COLOQUE AQUI A QUANTIDADE REAL DE SERVIDORES DO SEU BOT
+};
+
+async function updateLiveStats() {
     try {
-        // Busca do seu servidor Kosmika via Widget
-        const response = await fetch('https://discord.com/api/guilds/S9VhaTXk76/widget.json');
+        // Busca dados do Widget do Discord (Membros Online/Totais)
+        const response = await fetch(`https://discord.com/api/guilds/${CONFIG.serverID}/widget.json`);
         const data = await response.json();
 
-        // Atualiza Membros (online agora no widget)
-        if(data && data.presence_count) {
-            document.getElementById('member-count').innerText = data.presence_count + "+";
+        if(data) {
+            // Atualiza Servidores (Valor manual definido acima)
+            document.getElementById('server-count').innerText = CONFIG.totalServers;
+
+            // Atualiza Membros do Suporte em Tempo Real
+            // data.presence_count mostra quantos estão online agora no seu servidor
+            document.getElementById('member-count').innerText = data.presence_count;
         }
     } catch (error) {
-        console.log("Erro ao carregar membros reais, usando valor padrão.");
-        document.getElementById('member-count').innerText = "150";
+        console.error("Erro ao atualizar dados:", error);
     }
 }
 
-getLiveStats();
+// Executa ao carregar a página
+updateLiveStats();
+
+// ATUALIZAÇÃO EM TEMPO REAL: Roda a cada 30 segundos sem dar F5 na página
+setInterval(updateLiveStats, 30000);
