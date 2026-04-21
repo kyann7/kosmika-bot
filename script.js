@@ -1,62 +1,47 @@
 const canvas = document.getElementById("space");
-const ctx = canvas.getContext("2d");
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+if (canvas) {
+  const ctx = canvas.getContext("2d");
 
-let stars = [];
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
 
-for (let i = 0; i < 200; i++) {
-  stars.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 2,
-    speed: Math.random() * 0.3
-  });
-}
+  resize();
+  window.addEventListener("resize", resize);
 
-let mouse = { x: null, y: null };
+  const stars = [];
 
-window.addEventListener("mousemove", (e) => {
-  mouse.x = e.x;
-  mouse.y = e.y;
-});
+  for (let i = 0; i < 120; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 1.5,
+      speed: Math.random() * 0.2
+    });
+  }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "white";
+    ctx.fillStyle = "white";
 
-  stars.forEach(star => {
-    star.y += star.speed;
+    stars.forEach(star => {
+      star.y += star.speed;
 
-    if (star.y > canvas.height) {
-      star.y = 0;
-      star.x = Math.random() * canvas.width;
-    }
-
-    // interação com mouse
-    if (mouse.x && mouse.y) {
-      let dx = star.x - mouse.x;
-      let dy = star.y - mouse.y;
-      let dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < 100) {
-        star.x += dx * 0.02;
-        star.y += dy * 0.02;
+      if (star.y > canvas.height) {
+        star.y = 0;
+        star.x = Math.random() * canvas.width;
       }
-    }
 
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-    ctx.fill();
-  });
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-  requestAnimationFrame(draw);
+    requestAnimationFrame(draw);
+  }
+
+  draw();
 }
-
-draw();
