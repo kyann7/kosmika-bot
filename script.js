@@ -150,7 +150,7 @@ window.addEventListener('resize', init);
 
 
 // ==========================================
-// INJEÇÃO E ATUALIZAÇÃO CORRIGIDA
+// BUSCA DE DADOS REAIS - KOSMIKA BOT
 // ==========================================
 
 const heroContainer = document.querySelector('.hero');
@@ -160,11 +160,11 @@ statusWrapper.className = 'status-wrapper';
 statusWrapper.innerHTML = `
   <div class="status-card">
     <span>Servidores</span>
-    <h3 id="server-count">50+</h3>
+    <h3 id="server-count">Carregando...</h3>
   </div>
   <div class="status-card">
     <span>Membros Suporte</span>
-    <h3 id="member-count">...</h3>
+    <h3 id="member-count">Carregando...</h3>
   </div>
   <div class="status-card">
     <span>Status</span>
@@ -176,28 +176,35 @@ if(heroContainer) {
     heroContainer.appendChild(statusWrapper);
 }
 
-async function getLiveStats() {
-    const serverID = "931659654369513542"; // Seu ID
+async function fetchRealStats() {
+    // ID extraído do seu link: https://discord.com/channels/931659654369513542/...
+    const GUILD_ID = "931659654369513542"; 
+    
     try {
-        const response = await fetch(`https://discord.com/api/guilds/${serverID}/widget.json`);
+        // Tentativa de buscar os dados REAIS
+        const response = await fetch(`https://discord.com/api/guilds/${GUILD_ID}/widget.json`);
         
-        if (!response.ok) throw new Error('Widget desativado');
+        if (!response.ok) {
+            throw new Error("Widget desativado no servidor");
+        }
 
         const data = await response.json();
+        
+        // Atualiza com os membros ONLINE reais do suporte
+        document.getElementById('member-count').innerText = data.presence_count;
+        
+        // Quantidade de servidores (O Discord não fornece isso publicamente por segurança)
+        // Aqui, para ser real, o ideal é você conectar com a API do seu Bot se tiver uma.
+        document.getElementById('server-count').innerText = "50+"; 
 
-        // presence_count = membros online agora
-        if (data && data.presence_count !== undefined) {
-            document.getElementById('member-count').innerText = data.presence_count;
-        } else {
-            document.getElementById('member-count').innerText = "150+";
-        }
     } catch (error) {
-        console.log("Erro ao buscar dados reais. Verifique se o Widget está ON.");
-        // Valor padrão caso o bot/widget falhe
-        document.getElementById('member-count').innerText = "150+";
+        console.error("Não foi possível ler os dados reais:", error);
+        // Se falhar, ele avisa no console e você sabe que o Widget ainda está OFF
+        document.getElementById('member-count').innerText = "Erro: Widget OFF";
+        document.getElementById('server-count').innerText = "50+";
     }
 }
 
-getLiveStats();
-// Atualiza a cada 1 minuto
-setInterval(getLiveStats, 60000);
+fetchRealStats();
+// Atualiza a cada 2 minutos para ser "tempo real"
+setInterval(fetchRealStats, 120000);
